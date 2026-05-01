@@ -1,121 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFighters } from './store/fighterSlice';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const { status, data, error } = useSelector((state) => state.fighters);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchFighters());
+    }
+  }, [status, dispatch]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="min-h-screen bg-background text-foreground dark p-8 flex flex-col items-center justify-center">
+      <div className="max-w-2xl w-full text-center space-y-6">
+        <h1 className="text-4xl font-bold text-primary tracking-tight">UFCRealStats API</h1>
+        
+        {status === 'loading' && (
+          <div className="p-6 border border-border rounded-lg bg-secondary/50 animate-pulse">
+            <p className="text-muted-foreground text-lg">Fetching live data using axios</p>
+          </div>
+        )}
+        
+        {status === 'failed' && (
+          <div className="p-6 border border-destructive rounded-lg bg-destructive/10">
+            <p className="text-destructive font-mono text-sm">Error: {error}</p>
+            <p className="text-muted-foreground mt-2 text-sm">.</p>
+          </div>
+        )}
+        
+        {status === 'succeeded' && (
+          <div className="p-6 border border-primary/50 rounded-lg bg-primary/10 shadow-lg shadow-primary/5">
+            <h2 className="text-2xl font-semibold text-green-400 mb-2">Connection to custom api Successful!</h2>
+            <p className="text-muted-foreground text-lg">
+              Successfully loaded <span className="font-bold text-foreground text-2xl">{data.length}</span> fighters into the Redux store using standard REST API integration.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
