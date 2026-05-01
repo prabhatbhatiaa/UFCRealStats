@@ -5,6 +5,7 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { fetchFighters } from './store/fighterSlice';
 import { AppLayout } from './components/layout/AppLayout';
 import { FighterCard } from './components/fighters/FighterCard';
+import { CompareEngine } from './pages/CompareEngine';
 
 
 const FighterExplorer = () => {
@@ -16,15 +17,19 @@ const FighterExplorer = () => {
   const itemsPerPage = 12;
 
   const uniqueWeightClasses = useMemo(() => {
-    const classes = new Set(fighters.map(f => f.weight_class).filter(Boolean));
+    const classes = new Set(fighters.map(f => f.weightClass).filter(Boolean));
     return ['All', ...Array.from(classes).sort()];
   }, [fighters]);
 
   const filteredFighters = useMemo(() => {
     return fighters.filter((fighter) => {
-      const matchesSearch = fighter.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            (fighter.nickname && fighter.nickname.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchesWeight = weightClassFilter === 'All' || fighter.weight_class === weightClassFilter;
+      const safeName = fighter.name || '';
+      const safeNickname = fighter.nickname || '';
+      const matchesSearch = safeName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            safeNickname.toLowerCase().includes(searchQuery.toLowerCase());
+                            
+      const matchesWeight = weightClassFilter === 'All' || fighter.weightClass === weightClassFilter;
+      
       return matchesSearch && matchesWeight;
     });
   }, [fighters, searchQuery, weightClassFilter]);
@@ -127,7 +132,6 @@ const FighterExplorer = () => {
 };
 
 const Dashboard = () => <div className="container py-10"><h1 className="text-3xl font-bold">Dashboard (Coming Next)</h1></div>;
-const CompareEngine = () => <div className="container py-10"><h1 className="text-3xl font-bold">Compare Engine (Coming Soon)</h1></div>;
 
 function App() {
   const dispatch = useDispatch();
