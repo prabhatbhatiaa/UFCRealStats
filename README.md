@@ -3,7 +3,8 @@
 <img width="2777" height="1605" alt="image" src="https://github.com/user-attachments/assets/ac13beea-d1db-4d5d-afb8-482c4dd59390" />
 
 **See the fight before it happens.**  
->> Currently in Early Beta
+> Currently in Early Beta
+
 UFCRealStats is a high-performance, real-time analytics engine and dashboard that transforms raw octagon data into elite fight intelligence. Compare fighters, decode matchups, and forecast outcomes with a precision-built React application.
 
 ---
