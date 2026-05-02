@@ -5,49 +5,38 @@
 @tailwind utilities;
 
 @layer base {
+  /* LIGHT MODE (Default) */
   :root {
-    /* Premium Light Mode: White, Black, Red */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
-    --surface: 0 0% 98%;
-    --surface-2: 0 0% 96%;
-    --surface-3: 0 0% 94%;
-    
-    --primary: 0 84% 52%; /* Solid UFC Red */
+    --background: 220 30% 98%;
+    --foreground: 222 47% 11%;
+    --surface: 0 0% 100%;
+    --surface-2: 220 20% 95%;
+    --surface-3: 220 18% 92%;
+    --primary: 0 84% 55%; /* UFC Red */
     --primary-foreground: 0 0% 100%;
-    
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-    --info: 210 100% 50%;
-    
-    --border: 0 0% 90%;
-    --border-strong: 0 0% 80%;
-    --radius: 0.875rem;
-    --shadow-card: 0 4px 15px -3px rgba(0,0,0,0.05);
+    --secondary: 220 18% 92%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 18% 94%;
+    --muted-foreground: 220 9% 45%;
+    --border: 220 14% 88%;
+    --border-strong: 220 14% 80%;
   }
 
+  /* DARK MODE */
   .dark {
-    /* Premium Dark Mode: Graphite, White, Red */
     --background: 240 10% 4%;
     --foreground: 0 0% 98%;
     --surface: 240 10% 6%;
     --surface-2: 240 10% 8%;
     --surface-3: 240 10% 10%;
-    
-    --primary: 0 84% 52%; /* Solid UFC Red */
+    --primary: 0 84% 55%; /* UFC Red */
     --primary-foreground: 0 0% 100%;
-    
     --secondary: 240 10% 10%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 10% 12%;
     --muted-foreground: 240 5% 60%;
-    --info: 210 100% 50%;
-    
     --border: 240 10% 12%;
     --border-strong: 240 10% 18%;
-    --shadow-card: 0 4px 20px -2px rgba(0,0,0,0.5);
   }
 }
 
@@ -62,23 +51,10 @@
 
 @layer components {
   .surface-card {
-    @apply bg-surface border border-border rounded-[var(--radius)] transition-all duration-300;
-    box-shadow: var(--shadow-card);
+    @apply bg-surface border border-border rounded-xl transition-all duration-300;
+    box-shadow: 0 4px 20px -2px rgba(0,0,0,0.08);
   }
-  .chip-primary { 
-    @apply inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary tracking-widest uppercase; 
-  }
-  .chip { 
-    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[10px] font-bold tracking-widest uppercase text-foreground/80; 
-  }
-  .stat-num {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
-  }
-  /* The Lovable Smoothness */
-  .hover-lift { 
-    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-primary/40; 
+  .dark .surface-card {
+    box-shadow: 0 4px 20px -2px rgba(0,0,0,0.5);
   }
 }

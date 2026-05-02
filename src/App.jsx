@@ -7,7 +7,6 @@ import { FighterExplorer } from './pages/FighterExplorer';
 import { CompareEngine } from './pages/CompareEngine';
 import { Dashboard } from './pages/Dashboard';
 
-
 function App() {
   const dispatch = useDispatch();
 
@@ -17,7 +16,8 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<AppLayout theme="dark" />}>
+      {/* FIX: Removed the hardcoded theme="dark" prop */}
+      <Route element={<AppLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/fighters" element={<FighterExplorer />} />
         <Route path="/compare" element={<CompareEngine />} />

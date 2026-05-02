@@ -51,14 +51,13 @@ export function Dashboard() {
       <section className="relative pt-20 pb-16 md:pt-28 md:pb-32 border-b border-border overflow-hidden">
         
         <div className="absolute right-0 top-0 bottom-0 w-full md:w-[65%] lg:w-[60%] z-0 flex justify-end">
-          {/* MOBILE FIX: Gradient goes from bottom-up on small screens to save text, left-to-right on md screens */}
           <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background via-background/60 md:via-transparent to-transparent z-10" />
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background to-transparent z-10" />
           
           <img 
             src="/ufc-hero.jpg" 
             alt="UFC Champions" 
-            className="h-full w-full object-cover object-center md:object-right-top opacity-60 md:opacity-90 dark:opacity-40 md:dark:opacity-80 transition-opacity duration-300" 
+            className="h-full w-full object-cover object-center md:object-right-top opacity-30 md:opacity-90 dark:opacity-40 md:dark:opacity-80 transition-opacity duration-300" 
           />
         </div>
 
@@ -72,7 +71,6 @@ export function Dashboard() {
               <span className="tracking-widest uppercase text-muted-foreground font-bold">Real-Time UFC Intelligence</span>
             </div>
             
-            {/* MOBILE FIX: text-5xl instead of 6xl for phones */}
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.05]">
               See the fight <br />
               <span className="text-primary drop-shadow-md">before it happens.</span>
@@ -82,7 +80,6 @@ export function Dashboard() {
               UFCRealStats turns raw octagon data into elite fight intelligence — compare fighters, decode matchups, and forecast outcomes with a precision-built analytics engine.
             </p>
             
-            {/* MOBILE FIX: Full width buttons on mobile, inline on desktop */}
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-3">
               <Link to="/compare" className="w-full sm:w-auto inline-flex items-center justify-center h-12 px-8 rounded-md bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-md">
                 <Icons.Compare /> <span className="ml-2">Compare Fighters</span>
@@ -92,7 +89,6 @@ export function Dashboard() {
               </Link>
             </div>
 
-            {/* MOBILE FIX: Tighter grid for stats */}
             <div className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 gap-px bg-border rounded-xl overflow-hidden border border-border shadow-sm">
               <StatBlock label="Fighters tracked" value="1,248" icon={<Icons.Users />} />
               <StatBlock label="Stats per fighter" value="28" icon={<Icons.Activity />} />
@@ -103,7 +99,7 @@ export function Dashboard() {
         </div>
       </section>
 
-      {/* 2. FEATURED MATCHUP (MOBILE OPTIMIZED) */}
+      {/* 2. FEATURED MATCHUP */}
       <section className="container py-12 md:py-16 px-4 md:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
           <div>
@@ -117,7 +113,6 @@ export function Dashboard() {
 
         <div className="surface-card overflow-hidden">
           <div className="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border">
-            {/* MOBILE FIX: Adjusted padding and gap for smaller screens */}
             <div className="p-5 md:p-8 grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-6 bg-surface-2 relative">
               <FeaturedFighter fighter={a} side="left" pct={62} />
               <div className="relative text-center px-2">
@@ -179,7 +174,7 @@ export function Dashboard() {
                 
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="h-10 w-10 md:h-12 md:w-12 rounded-full border border-border bg-surface-3 overflow-hidden shrink-0 flex items-end justify-center">
-                    <img src={f.imgUrl} alt={f.name} className="w-[120%] h-auto object-contain translate-y-1" onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${f.name.replace(' ', '+')}&background=121214&color=fff&size=256`; }} />
+                    <SmartImage imgUrl={f.imgUrl} name={f.name} className="w-[120%] h-auto object-contain translate-y-1" />
                   </div>
                   <div className="min-w-0">
                     <div className="font-bold text-sm md:text-base truncate text-foreground group-hover:text-primary transition-colors">{f.name}</div>
@@ -201,7 +196,7 @@ export function Dashboard() {
         </div>
       </section>
 
-      {/* 5. CTA (MOBILE OPTIMIZED) */}
+      {/* 5. CTA */}
       <section className="container py-12 md:py-20 px-4 md:px-8">
         <div className="surface-card relative overflow-hidden p-8 md:p-14 text-center border-primary/20">
           <div className="relative z-10">
@@ -219,6 +214,22 @@ export function Dashboard() {
 
 // --- SUB-COMPONENTS ---
 
+// SMART IMAGE: Routes through wsrv.nl to bypass UFC's image blocking.
+// FALLBACK FIX: Background is now UFC Red (ef4444) so it looks beautiful in Light AND Dark mode.
+function SmartImage({ imgUrl, name, className }) {
+  const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(imgUrl)}`;
+  const fallbackUrl = `https://ui-avatars.com/api/?name=${name.replace(/\s+/g, '+')}&background=ef4444&color=fff&size=512`;
+
+  return (
+    <img 
+      src={proxyUrl} 
+      alt={name} 
+      className={className} 
+      onError={(e) => { e.target.src = fallbackUrl; }}
+    />
+  );
+}
+
 function StatBlock({ label, value, icon }) {
   return (
     <div className="bg-surface/80 p-4 md:p-5 flex flex-col items-center md:items-start text-center md:text-left backdrop-blur-sm">
@@ -233,7 +244,7 @@ function FeaturedFighter({ fighter, side, pct }) {
   return (
     <div className={`relative flex ${side === "right" ? "flex-row-reverse text-right" : ""} items-center gap-3 md:gap-4`}>
       <div className="relative h-16 w-16 md:h-24 md:w-24 rounded-xl border border-border bg-surface-3 overflow-hidden shadow-sm flex items-end justify-center shrink-0">
-         <img src={fighter.imgUrl} alt={fighter.name} className="w-[85%] h-auto object-contain translate-y-1" onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${fighter.name.replace(' ', '+')}&background=121214&color=fff&size=512`; }} />
+         <SmartImage imgUrl={fighter.imgUrl} name={fighter.name} className="w-[85%] h-auto object-contain translate-y-1" />
       </div>
       <div className="min-w-0">
         <div className="text-[10px] md:text-xs font-bold text-muted-foreground truncate">{fighter.weightClass}</div>
@@ -255,11 +266,10 @@ function FighterCard({ fighter, rank }) {
       </div>
 
       <div className="relative h-40 md:h-48 bg-surface-2 overflow-hidden border-b border-border flex justify-center items-end pt-4">
-        <img 
-          src={fighter.imgUrl} 
-          alt={fighter.name} 
+        <SmartImage 
+          imgUrl={fighter.imgUrl} 
+          name={fighter.name} 
           className="w-[90%] h-[110%] object-contain object-bottom transition-transform duration-500 group-hover:scale-105" 
-          onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${fighter.name.replace(' ', '+')}&background=121214&color=fff&size=512`; }}
         />
       </div>
 
