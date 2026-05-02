@@ -5,8 +5,8 @@ import { fetchFighters } from './store/fighterSlice';
 import { AppLayout } from './components/layout/AppLayout';
 import { FighterExplorer } from './pages/FighterExplorer';
 import { CompareEngine } from './pages/CompareEngine';
+import { Dashboard } from './pages/Dashboard';
 
-const Dashboard = () => <div className="container py-10"><h1 className="text-3xl font-bold">Dashboard</h1></div>;
 
 function App() {
   const dispatch = useDispatch();

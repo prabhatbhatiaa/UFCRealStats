@@ -7,53 +7,49 @@ export const fetchFighters = createAsyncThunk(
     try {
       let allFighters = [];
       let from = 0;
-      let to = 999;
       let hasMore = true;
 
-      // We loop because Supabase hard-caps requests at 1000 rows
       while (hasMore) {
-        const response = await ufcApi.get('/fighters?select=*&order=Fighter_Name.asc', {
-          headers: { 'Range': `${from}-${to}` }
+        const response = await ufcApi.get('/fighters?select=*', {
+          headers: { 'Range': `${from}-${from + 999}` }
         });
 
-        const batch = response.data.map(row => ({
-          id: row.Fighter_URL?.split('/').pop() || Math.random().toString(),
-          name: row.Fighter_Name || 'Unknown',
-          weightClass: row.Weight || 'Unknown',
-          wins: row.Wins ?? 0,
-          losses: row.Losses ?? 0,
-          draws: row.Draws ?? 0,
-          stance: row.Stance || 'Unknown',
-          slpm: row.SLpM || 0,
-          strAcc: parseFloat(row.Str_Acc) || 0,
-          strDef: parseFloat(row.Str_Def) || 0,
-          tdAvg: row.TD_Avg || 0,
-          tdAcc: parseFloat(row.TD_Acc) || 0,
-          tdDef: parseFloat(row.TD_Def) || 0,
-          subAvg: row.Sub_Avg || 0
-        }));
+        const batch = response.data.map(row => {
+          const name = row.Fighter_Name || 'Unknown';
+          // Generate a URL-friendly slug for real images (e.g., "Conor McGregor" -> "conor-mcgregor")
+          const imageSlug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z-]/g, '');
+          
+          return {
+            id: row.Fighter_URL?.split('/').pop() || Math.random().toString(),
+            name: name,
+            image: `https://dmxg5wxfqgb4u.cloudfront.net/styles/f_authors_headshot/s3/image-root/${imageSlug}__headshot.png`,
+            weightClass: row.Weight || 'Unknown',
+            wins: row.Wins ?? 0,
+            losses: row.Losses ?? 0,
+            draws: row.Draws ?? 0,
+            stance: row.Stance || 'Unknown',
+            slpm: row.SLpM || 0,
+            strAcc: parseFloat(row.Str_Acc) || 0,
+            tdAvg: row.TD_Avg || 0,
+            tdDef: parseFloat(row.TD_Def) || 0
+          };
+        });
 
         allFighters = [...allFighters, ...batch];
-
-        // If we got less than 1000, we reached the end of the CSV
-        if (response.data.length < 1000) {
-          hasMore = false;
-        } else {
-          from += 1000;
-          to += 1000;
-        }
+        if (response.data.length < 1000) hasMore = false;
+        else from += 1000;
       }
-
-      return allFighters;
+      // Filter out 'ghost' fighters to keep only the actual roster
+      return allFighters.filter(f => f.wins + f.losses > 0);
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
 
 const fighterSlice = createSlice({
   name: 'fighters',
-  initialState: { data: [], status: 'idle', count: 0 },
+  initialState: { data: [], status: 'idle' },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -61,7 +57,6 @@ const fighterSlice = createSlice({
       .addCase(fetchFighters.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.data = action.payload;
-        state.count = action.payload.length;
       });
   },
 });
