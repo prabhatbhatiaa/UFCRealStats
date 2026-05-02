@@ -1,31 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     container: { center: true, padding: "1.25rem", screens: { "2xl": "1440px" } },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        "border-strong": "hsl(var(--border-strong))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        surface: "hsl(var(--surface))",
-        "surface-2": "hsl(var(--surface-2))",
-        "surface-3": "hsl(var(--surface-3))",
+        background: "#0A0A0C", // Deep graphite from Lovable
+        foreground: "#FAFAFA",
+        surface: "#121214",
+        "surface-2": "#18181B",
+        "surface-3": "#27272A",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#EF4444", // UFC Red
+          foreground: "#FFFFFF",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        info: "hsl(var(--info))",
+        secondary: "#18181B",
+        "secondary-foreground": "#FAFAFA",
+        border: "#27272A",
+        muted: "#A1A1AA",
+        info: "#3B82F6",
+      },
+      backgroundImage: {
+        "gradient-primary": "linear-gradient(135deg, #EF4444 0%, #B91C1C 100%)",
+        "gradient-glow": "radial-gradient(60% 60% at 50% 0%, rgba(239, 68, 68, 0.15) 0%, transparent 70%)",
       },
       keyframes: {
         "fade-in-up": {

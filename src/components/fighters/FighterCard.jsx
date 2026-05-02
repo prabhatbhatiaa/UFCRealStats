@@ -6,11 +6,11 @@ export function FighterCard({ fighter }) {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-all hover:shadow-md hover:border-primary/50 group">
       <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-        <img
-          src={placeholderImage}
-          alt={fighter.name}
-          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-        />
+      <img 
+        src={`https://wsrv.nl/?url=${encodeURIComponent(`https://dmxg5wxfqgb4u.cloudfront.net/styles/f_authors_headshot/s3/image-root/${fighter.slug}__headshot.png`)}`}
+        alt={fighter.name} 
+        onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${fighter.name.replace(/\s+/g, '+')}&background=121214&color=fff&size=512`; }}
+      />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
       </div>
 
